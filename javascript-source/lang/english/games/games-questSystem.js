@@ -3,6 +3,8 @@ $.lang.register('questsystem.command.adminonly','Sorry, that command is limited 
 $.lang.register('questsystem.debug.page1','QUESTDEBUG: foundKeys: $1, totalKeys: $2, findKeyPercent: $3, liegeName: [$4]  greatEvilName: [$5], greatEvilStrength $6');
 $.lang.register('questsystem.keyfound','As the survivors turn to leave, a shimmer in the air catches the eye of $1.  Inside this mystical hiding place is found $2! The $4$5 key, the $3, has been found!');
 $.lang.register('questsystem.finalbattle.usage', 'Usage: !finalbattle [$1].  The final battle is$2 available at this time.  $3 of $4 $5 have been found.');
+$.lang.register('questsystem.keyname.singular','key');
+$.lang.register('questsystem.keyname.plural','keys');
 
 $.lang.register('questsystem.finalbattle.locked', 'The final battle is not available at this time.  $3 of $4 $5 have been found.');
 $.lang.register('questsystem.finalbattle.bettoohigh', 'You can not join the final battle with $1, the maximum is $2.');
@@ -31,13 +33,15 @@ $.lang.register('questsystem.payoutwhisper', 'Quest completed, $1 + $2 has been 
 $.lang.register('questsystem.runstory', 'Starting quest "$1" with $2 player(s).');
 $.lang.register('questsystem.set.success', 'Set $1 to $2.');
 $.lang.register('questsystem.set.usage', 'Usage: !quest set [settingname] [value]. Values are: joinTime, coolDown, gainPercent, minBet, maxBet, entrymessages, warningmessages, greatEvilName, liegeName, totalKeys, foundKeys, findKeyPercent, greatEvilStrength, startEvilStrength, finalMinBet, finalMaxBet, finalHordeBonusPercent');
-$.lang.register('questsystem.nokeys','The ruler of the land, $1, solemnly addresses the gathered adventurers.  "It is good to see the bravery gathered before me.  The Dark Shadow of $2 is gathering the forces of Darkness once more.  The seers have gleaned how to end this threat, but we must find the $3key$4 to the Lost Tomb of $2.  None will be turned away in our time of need."  ---Use "!quest [$5]" to join in, heroes!---');
+$.lang.register('questsystem.nokeys','The ruler of the land, $1, solemnly addresses the gathered adventurers.  "It is good to see the bravery gathered before me.  The Dark Shadow of $2 is gathering the forces of Darkness once more.  The seers have gleaned how to end this threat, but we must find the $3 $4 to the Lost Tomb of $2.  None will be turned away in our time of need."  ---Use "!quest [$5]" to join in, heroes!---');
 $.lang.register('questsystem.start.success', '$1 opens a letter from $3, ruler of the land. "Some ancient scrolls were found which could lead us to the $5$6 key.  Buy supplies and gather a strong band of companions, then return to me.  The evil of The Dark Shadow of $4 must be stopped at all costs!" ---Use "!quest [$2]" to join in!---');
 $.lang.register('questsystem.start.successallfound', '$1 again seeks to form a band of adventurers to weaken the forces of evil further before the final conflict!  Come, $3 needs your help!  ---Use "!quest [$2]" to join in!---');
 
-$.lang.register('questsystem.status.header','A notice nearby from your ruler $2$3 proclaims that $4 key$5 been found.');
+$.lang.register('questsystem.status.header.all','$1: A notice nearby from your ruler $2 proclaims that heroes have found all keys.');
+$.lang.register('questsystem.status.header.none','$1: A notice nearby from your ruler $2 proclaims that heroes have found no keys yet.');
+$.lang.register('questsystem.status.header','$1: A notice nearby from your ruler $2 proclaims that heroes have found $3 $4.');
 $.lang.register('questsystem.status.detail','The $3 was found by $1$2');
-$.lang.register('questsystem.finalbattle.notice','The final battle is available.  Type !quest finalbattle [$1] to end the evil of $2, who is as strong as an army worth $3 $4!');
+$.lang.register('questsystem.finalbattle.notice','The final battle is available.  Type !finalbattle [$1] to end the evil of The Dark Shadow of $2, who is as strong as an army worth $3 $4!');
 $.lang.register('questsystem.sameliege','After the battle, the people of the land convene and decide who should rule the land in the days coming.  The past wisdom of $1 is universally recognized!  They will remain as liege!');
 $.lang.register('questsystem.newliege','After the battle, the people of the land convene and decide who should rule the land in the days coming.  $1 has decided to retire after the war effort, so $2 has been chosen as new liege!');
 $.lang.register('questsystem.sameevil', 'Suddenly the shadows engulf $1, who emits a gasp!  "You can only defeat me, not destroy me!" the Dark Shadow whispers as it coalesces in the form of $1 once again before it disappears!  $1 moans as the Mark of the Shade reappears!');

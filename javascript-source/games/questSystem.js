@@ -297,7 +297,7 @@
 			$.say($.lang.get('questsystem.nokeys',
 				liegeName, greatEvilName,
 				((totalKeys>1)?(''+totalKeys+' '):('')),
-				((totalKeys>1)?('s'):('')),
+				((totalKeys>1)?($.lang.get('questsystem.keyname.plural')):($.lang.get('questsystem.keyname.singular'))),
 				$.pointNameMultiple
 			));
 		}
@@ -328,7 +328,7 @@
 	{
 		if (totalKeys > foundKeys)
 		{
-			$.say($.lang.get('questsystem.finalbattle.locked', foundKeys, totalKeys, ( (totalKeys>1)?('keys'):('key') ) ));
+			$.say($.lang.get('questsystem.finalbattle.locked', $.pointNameMultiple, ' not', foundKeys, totalKeys, ( (totalKeys>1)?($.lang.get('questsystem.keyname.plural')):($.lang.get('questsystem.keyname.singular')) ) ));
 			return;
 		}
 		joinHeist(sender, bet, finalAdventure, finalMinBet, finalMaxBet);
@@ -547,7 +547,7 @@
 		{
 			if (finalAdventure.survivors.length==0 && finalAdventure.caught.length > 0)
 			{
-				finalAdventure.survivors.push(caught.pop());
+				finalAdventure.survivors.push(finalAdventure.caught.pop());
 			}
 			
 			if (finalAdventure.survivors.length==1)
@@ -765,34 +765,31 @@
 	
 	function displayStatus(sender)
 	{
-		
+		var message = '';
 		// No key has been found.
-		var keycountstring='No';
-		var pluralverbstring=' has';
-		
-		if (foundKeys==totalKeys)
+
+		if (foundKeys == 0)
 		{
-			if (foundKeys == 1)
+			message=$.lang.get('questsystem.status.header.none', $.userPrefix(sender), liegeName);
+
+		}
+		else if (foundKeys==totalKeys)
+		{
+			message=$.lang.get('questsystem.status.header.all', $.userPrefix(sender), liegeName);
+		} else // if (foundKeys > 0  && foundKeys != totalKeys)
+		{
+			if (foundKeys > 1)
 			{
-				// The key has been found.
-				keycountstring='The';
+				message=$.lang.get('questsystem.status.header', $.userPrefix(sender), liegeName, foundKeys, $.lang.get('questsystem.keyname.plural'));
 			}
 			else
-			{   // All keys have been found
-				keycountstring='All '+totalKeys+' ';
-				pluralverbstring='s have';
-			}
-		} else if (foundKeys > 0 )
-		{
-			keycountstring=''+foundKeys;
-			if (foundKeys>1)
 			{
-				pluralverbstring='s have';
+				message=$.lang.get('questsystem.status.header', $.userPrefix(sender), liegeName, foundKeys, $.lang.get('questsystem.keyname.singular'));
+				
 			}
 		}
 		
-		var message = 
-			$.lang.get('questsystem.status.header', sender, liegeName,'',keycountstring,pluralverbstring);
+
 		var details='';
 		
 		var firstTime=true;
@@ -958,7 +955,12 @@
 		greatEvilStrength=numnum;
 		$.inidb.set('questSettings', 'greatEvilStrength',numnum);
 	}
-	
+
+	function setGreatEvilName(newname)
+	{
+		greatEvilName=newname;
+		$.inidb.set('questSettings', 'greatEvilName', newname);
+	}
 	
 	function strengthenEvil(sender, amount)
 	{
@@ -1175,8 +1177,8 @@
 						$.say($.whisperPrefix(sender) + $.lang.get('questsystem.set.usage'));
 						return;
 					}
-                    greatEvilName=actionArg2;
-                    $.inidb.set('questSettings', 'greatEvilName', actionArg2);
+					setGreatEvilName(actionArg2);
+
                 }
 				
 				/**
@@ -1309,10 +1311,10 @@
             $.registerChatCommand('./games/questsystem.js', 'quest', 7);
             $.registerChatSubcommand('quest', 'set', 1);
 			$.registerChatSubcommand('quest', 'debug', 1);
-			$.registerChatSubcommand('quest', 'status', 1);
+			$.registerChatSubcommand('quest', 'status', 7);
 			$.registerChatSubcommand('quest', 'resetkeyquest', 1);
-            $.registerChatCommand('./games/questsystem.js', 'evilgrows');
-            $.registerChatCommand('./games/questsystem.js', 'finalbattle');
+            $.registerChatCommand('./games/questsystem.js', 'evilgrows',7);
+            $.registerChatCommand('./games/questsystem.js', 'finalbattle',7);
         }
     });
 
