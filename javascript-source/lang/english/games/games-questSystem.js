@@ -16,6 +16,7 @@ $.lang.register('questsystem.evilgrows.usage', 'Usage: !evilgrows [$1].   This w
 $.lang.register('questsystem.evilgrows.needpoints', 'You can not strengthen evil with $1 $2, since you only have $3.');
 $.lang.register('questsystem.evilgrows.addpoints','Oh no! $1 has nefariously sent $2 $3 worth of supplies in support of The Dark Shadow of $4, whose forces are now worth $5 $6.');
 $.lang.register('questsystem.quest.usage', 'Usage: !quest [$1].  !quest status will show the overall progress.$2');
+$.lang.register('questsystem.quest.usage.admin',' Admins can also quest debug, quest resetkeyquest');
 $.lang.register('questsystem.join.alreadyjoined', 'You have already joined the quest!');
 $.lang.register('questsystem.completed', 'The quest ended! Survivors are: $1.');
 $.lang.register('questsystem.completed.no.win', 'The quest ended! There are no survivors.');
@@ -42,11 +43,15 @@ $.lang.register('questsystem.newliege','After the battle, the people of the land
 $.lang.register('questsystem.sameevil', 'Suddenly the shadows engulf $1, who emits a gasp!  "You can only defeat me, not destroy me!" the Dark Shadow whispers as it coalesces in the form of $1 once again before it disappears!  $1 moans as the Mark of the Shade reappears!');
 $.lang.register('questsystem.newevil.possessed', 'Suddenly the shadows engulf $1, who emits a gasp!  "You can only defeat me, not destroy me!" the Dark Shadow whispers. As it coalesces in the form of $1, it adds, " "My last form was too weak, but $1 is much stronger!"  Then it disappears, but $1 bears the Mark of the Shade now!');
 $.lang.register('questsystem.newevil.animated', 'The shadows seem to hover over the fallen and injured, flitting from form to form.  Suddenly they seems to hide $1 from sight!   An ebony doppelganger of $1 arises and addresses you. "My last form was too weak, but $1 is much stronger!"  Then it disappears, but $1 bears the Mark of the Shade now!');
-$.lang.register('questsystem.finalbattle.completed.loseshort','Even the fallen and injured share in the spoils, to ease their losses!');
+$.lang.register('questsystem.finalbattle.completed.loseshort','Even the fallen and injured share in the spoils, to ease their losses!  ');
 $.lang.register('questsystem.finalbattle.completed.no.win','Bravery alone does not win battles.  The Dark Shadow of $1 emerges victorious on the field of battle.  It is weakened, but not vanquished.  (Strength of $2)');
 
 $.lang.register('questsystem.finalbattle.completed.totalvictory','Amazingly, no heroes lost their lives!');
-
+$.lang.register('questsystem.finalbattle.completed.lose','The medics attend to the fallen, comforting $1');
+$.lang.register('questsystem.finalbattle.completed.victory.manycasualties','The medics attend to the $1 fallen, too numerous to list.');
+$.lang.register('questsystem.finalbattle.completed.victory.casualties','The medics attend to the fallen, comforting $1');
+$.lang.register('questsystem.finalbattle.completed.win.total','The cost of victory is high.  There are $1 heroes still standing, but $2 have fallen.');
+$.lang.register('questsystem.finalbattle.completed.win','Still standing in triumph after the battle, we see $1!');
 
 
 $.lang.register('questsystem.tamagotchijoined', '$1 is also joining the quest.');

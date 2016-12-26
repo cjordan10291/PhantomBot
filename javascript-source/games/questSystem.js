@@ -311,7 +311,7 @@
 		}
 		else
 		{
-			$.consoleLn("gamestate set to 1 in startFinalAdventure");
+			$.consoleDebug("gamestate set to 1 in startFinalAdventure");
 			thisAdventure.gameState = 1;
 			t = setTimeout(function() {
 				runFinalStory();
@@ -320,7 +320,7 @@
 			  liegeName,$.resolveRank(username),greatEvilName));
 			retval=true;
 		}
-		$.consoleLn(" startFinalBattle retval="+retval);
+		$.consoleDebug(" startFinalBattle retval="+retval);
 		return retval;
     };
 	
@@ -341,7 +341,7 @@
      * @returns {boolean}
      */
     function joinHeist(username, bet, thisAdventure, adventureMinBet, adventureMaxBet) {
-		$.consoleLn("got here joinHeist top");
+		$.consoleDebug("got here joinHeist top");
         if (thisAdventure.gameState > 1) {
             if (!warningMessage) return;
             $.say($.whisperPrefix(username) + $.lang.get('questsystem.'+thisAdventure.messageTag+'.notpossible'));
@@ -373,14 +373,14 @@
         }
 
         if (thisAdventure.gameState == 0) {
-			$.consoleLn("gamestate 0");
+			$.consoleDebug("gamestate 0");
 			if (!thisAdventure.heistFunction(username,thisAdventure))
 			{
-				$consoleLn("HeistFunction Return false");
+				$consoleDebug("HeistFunction Return false");
 				return;
 			}
         } else {
-			$.consoleLn("gamestate not 0");
+			$.consoleDebug("gamestate not 0");
             if (enterMessage) {
                 $.say($.whisperPrefix(username) + $.lang.get('questsystem.'+thisAdventure.messageTag+'.success', $.getPointsString(bet)));
             }
@@ -448,11 +448,11 @@
             story,
             line,
             t;
-		$.consoleLn("Got to runFinalStory");
+		$.consoleDebug("Got to runFinalStory");
         finalAdventure.gameState = 2;
         calculateFinalResult();
 		
-		$.consoleLn("Passed calculateFinalResult runFinalStory, finalStories.length is " + finalStories.length);
+		$.consoleDebug("Passed calculateFinalResult runFinalStory, finalStories.length is " + finalStories.length);
         for (var i in finalStories) {
             if (finalStories[i].game != null) {
                 if (($.twitchcache.getGameTitle() + '').toLowerCase() == finalStories[i].game.toLowerCase()) {
@@ -471,7 +471,7 @@
 
         $.say($.lang.get('questsystem.runstory', story.title, finalAdventure.users.length));
 
-		$.consoleLn("final story lines.length:" + story.lines.length)
+		$.consoleDebug("final story lines.length:" + story.lines.length)
 
         t = setInterval(function() {
             if (progress < story.lines.length) {
@@ -492,6 +492,7 @@
      */
     function calculateFinalResult() {
         var i;
+		
         for (i in finalAdventure.users) {
             if ($.randRange(0, 20) > 5) {
                 finalAdventure.survivors.push(finalAdventure.users[i]);
@@ -507,12 +508,12 @@
 		}
 		
 		finalAdventure.betTotal=betTotal;
-		betTotal=betTotal*(1+ (finalAdventure.users.length * finalHordeBonusPercent/100));
+		betTotal=betTotal*(1+ ((finalAdventure.users.length-1) * finalHordeBonusPercent/100));
 		finalAdventure.adjustedBetTotal=betTotal;
 		
 		finalAdventure.greatEvilVanquished=false;
 		
-		if (betTotal> (1.5*greatEvilStrength) )
+		if (betTotal> (2*greatEvilStrength) )
 		{
 			finalAdventure.greatEvilVanquished=true;
 		}
@@ -520,13 +521,18 @@
 		{
 			var dieRoll = $.randRange(1,100);
 			
-			if (dieRoll < (100*(betTotal / (betTotal+greatEvilStrength))))
+			if (dieRoll < (100 * betTotal / (betTotal+greatEvilStrength)))
 			{
 				finalAdventure.greatEvilVanquished=true;
 			}
 			else
 			{
 				finalAdventure.greatEvilVanquished=false;
+				for (i in finalAdventure.survivors)
+				{
+					finalAdventure.caught.push(finalAdventure.survivors[i]);
+				}
+				finalAdventure.survivors=[];
 				setGreatEvilStrength(greatEvilStrength-betTotal);
 				if (greatEvilStrength < 100)
 				{
@@ -539,53 +545,53 @@
 		
 		if (finalAdventure.greatEvilVanquished)
 		{
-			if (survivors.length==0 && caught.length > 0)
+			if (finalAdventure.survivors.length==0 && finalAdventure.caught.length > 0)
 			{
-				survivors.push(caught.pop());
+				finalAdventure.survivors.push(caught.pop());
 			}
 			
-			if (survivors.length==1)
+			if (finalAdventure.survivors.length==1)
 			{
 				//  One survivor.  He becomes the new liege, even if he was the old liege.
 				finalAdventure.newLiege=finalAdventure.survivors[0].username;
 			}
-			else if (survivors.length>1)
+			else if (finalAdventure.survivors.length>1)
 			{
-				var liegeIndex=$.randRange(0,survivors.length-1);
+				var liegeIndex=$.randRange(0,finalAdventure.survivors.length-1);
 				// We can pick a new liege
-				while (survivors[liegeIndex].username.equalsIgnoreCase(liegeName))
+				while (finalAdventure.survivors[liegeIndex].username.equalsIgnoreCase(liegeName))
 				{
-					liegeIndex=$.randRange(0,survivors.length-1);
+					liegeIndex=$.randRange(0,finalAdventure.survivors.length-1);
 				}
-				finalAdventure.newLiege=survivors[liegeIndex].username;
+				finalAdventure.newLiege=finalAdventure.survivors[liegeIndex].username;
 			}
 			
-			if (caught.length > 0)  // anyone caught can be the new evil
+			if (finalAdventure.caught.length > 0)  // anyone caught can be the new evil
 			{
 				finalAdventure.possessed=false;
-				finalAdventure.newEvil=finalAdventure.caught[$.randRange(0,caught.length-1)].username;
+				finalAdventure.newEvil=finalAdventure.caught[$.randRange(0,finalAdventure.caught.length-1)].username;
 			}
-			else  if (survivors.length == 1)// solo effort to vanquish the evil; The old great evil remains
+			else  if (finalAdventure.survivors.length == 1)// solo effort to vanquish the evil; The old great evil remains
 			{
 				finalAdventure.newEvil=greatEvilName;
 			}
-			else if (survivors.length == 2)  // no caught, 2 survivors.
+			else if (finalAdventure.survivors.length == 2)  // no caught, 2 survivors.
 			{
-				var evilIndex=$.randRange(0,survivors.length-1);
-				while (survivors[evilIndex].username.equalsIgnoreCase(liegeName))
+				var evilIndex=$.randRange(0,finalAdventure.survivors.length-1);
+				while (finalAdventure.survivors[evilIndex].username.equalsIgnoreCase(liegeName))
 				{
-					evilIndex=$.randRange(0,survivors.length-1);
+					evilIndex=$.randRange(0,finalAdventure.survivors.length-1);
 				}
-				finalAdventure.newEvil=survivors[evilIndex].username;
+				finalAdventure.newEvil=finalAdventure.survivors[evilIndex].username;
 			}
 			else // no caught, at least 3 survivors.  We can get a great evil not the current one and not the new liege
 			{
-				var evilIndex=$.randRange(0,survivors.length-1);
-				while (survivors[evilIndex].username.equalsIgnoreCase(liegeName) || survivors[evilIndex].equalsIgnoreCase(greatEvilName))
+				var evilIndex=$.randRange(0,finalAdventure.survivors.length-1);
+				while (finalAdventure.survivors[evilIndex].username.equalsIgnoreCase(liegeName) || finalAdventure.survivors[evilIndex].equalsIgnoreCase(greatEvilName))
 				{
-					evilIndex=$.randRange(0,survivors.length-1);
+					evilIndex=$.randRange(0,finalAdventure.survivors.length-1);
 				}
-				finalAdventure.newEvil=survivors[evilIndex].username;
+				finalAdventure.newEvil=finalAdventure.survivors[evilIndex].username;
 			}
 		}
     };
@@ -594,7 +600,7 @@
 	 * @function endFinalStory - runs the end final story cleanup and payout.
 	 **/
 	function endFinalStory() {
-        var i, pay, username, maxlength = 0;
+        var i, pay, username, maxlength = 0, maxlength2 = 0;
         var temp = [], temp2=[];
 
 		var finalGainPercentSurvive=50;
@@ -644,26 +650,34 @@
             $.say($.lang.get('questsystem.finalbattle.completed.win', temp.join(', ')));
         }
 		
+		$.consoleDebug("endFinal - before temp2 output");
 		if (temp2.length==0 && finalAdventure.greatEvilVanquished)
 		{
 			$.say($.lang.get('questsystem.finalbattle.completed.totalvictory'));
 		} else if (((maxlength2 + 14) + $.channelName.length) > 512) {
-            $.say($.lang.get('questsystem.finalbattle.completed.lose.total', finalAdventure.survivors.length, finalAdventure.caught.length)); //in case too many people enter.
-        } else {
-            $.say($.lang.get('questsystem.finalbattle.completed.loseshort', temp2.join(', ')));
+			$.say($.lang.get('questsystem.finalbattle.completed.victory.manycasualties', finalAdventure.caught.length));
+		} else if ( temp2.length > 0 ) {
+			$.say($.lang.get('questsystem.finalbattle.completed.victory.casualties', temp2.join(', ')));
         }
-
+		
+		$.consoleDebug("endFinal - after temp2 output");
 		if (finalAdventure.greatEvilVanquished)
 		{
+			$.consoleDebug("Before announceNewLiege");
 			announceNewLiege(finalAdventure.newLiege);
+			$.consoleDebug("Before setStartingGreatEvilStrngth");
 			setGreatEvilStrength(startingGreatEvilStrength);
+			$.consoleDebug("Before announceNewGreatEvil");
 			announceNewGreatEvil(finalAdventure.newEvil, finalAdventure.possessed);
+			$.consoleDebug("Before clearQuestKeys");
 			clearQuestKeys();
 		}
-		
+		$.consoleDebug("clearFinalAdventure ");
         clearFinalAdventure();
+		$.consoleDebug("After clear");
 
         temp = "";
+		temp2 = "";
         $.coolDown.set('finalbattle', true, coolDown);
     };
 	
@@ -880,7 +894,8 @@
             caught: [],
 			finalBattle: true,
 			messageTag: 'finalbattle',
-			heistFunction: startFinalAdventure
+			heistFunction: startFinalAdventure,
+			greatEvilVanquished: false
         }
 		
         $.inidb.RemoveFile('finalPayoutsTEMP');
@@ -894,12 +909,7 @@
 	}
 
 	
-	function setGreatEvilStrength(value)
-	{
-		greatEvilStrength=parseInt(value);
-		$.inidb.set('questSettings', 'greatEvilStrength', greatEvilStrength);
-	}
-	
+
 	function setStartingEvilStrength(value)
 	{
 		startingGreatEvilStrength=parseInt(value);
@@ -914,10 +924,10 @@
 	
 	function clearQuestKeys()
 	{
-		$.say('Clearing keys...');
+	
 		$.inidb.RemoveFile('questKeyFinders');
 		setFoundKeys(0);
-		$.say('Keys cleared.');
+
 	}
 
 	
@@ -928,7 +938,9 @@
 			$.say($.lang.get('questsystem.command.adminonly'));
 			return;
 		}
+		$.say('Clearing keys...');
 		clearQuestKeys();
+		$.say('Keys cleared.');
 	}
 	
 	/**
@@ -1018,7 +1030,7 @@
         if (command.equalsIgnoreCase('quest')) {
             if (!action) {
                 $.say($.whisperPrefix(sender) + $.lang.get('questsystem.quest.usage', $.pointNameMultiple,
-				(($.isAdmin(sender))?(' Admins can also quest debug, quest resetkeyquest'):(''))
+				(($.isAdmin(sender))?($.lang.get('questsystem.quest.usage.admin')):(''))
 				));
                 return;
             }
