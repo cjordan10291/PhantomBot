@@ -454,14 +454,14 @@
         calculateFinalResult();
 
         for (var i in finalStories) {
-            if (stories[i].game != null) {
-                if (($.twitchcache.getGameTitle() + '').toLowerCase() == stories[i].game.toLowerCase()) {
+            if (finalStories[i].game != null) {
+                if (($.twitchcache.getGameTitle() + '').toLowerCase() == finalStories[i].game.toLowerCase()) {
                     //$.consoleLn('gamespec::' + stories[i].title);
-                    temp.push({title: stories[i].title, lines: stories[i].lines});
+                    temp.push({title: finalStories[i].title, lines: finalStories[i].lines});
                 }
             } else {
                 //$.consoleLn('normal::' + stories[i].title);
-                temp.push({title: stories[i].title, lines: stories[i].lines});
+                temp.push({title: finalStories[i].title, lines: finalStories[i].lines});
             }
         }
 
@@ -469,7 +469,7 @@
             story = $.randElement(temp);
         } while (story == lastStory);
 
-        $.say($.lang.get('questsystem.runstory', story.title, currentAdventure.users.length));
+        $.say($.lang.get('questsystem.runstory', story.title, finalAdventure.users.length));
 
         t = setInterval(function() {
             if (progress < story.lines.length) {
@@ -486,9 +486,9 @@
     };
 	
 	   /**
-     * @function calculateResult
+     * @function calculateFinalResult
      */
-    function calculateResult() {
+    function calculateFinalResult() {
         var i;
         for (i in finalAdventure.users) {
             if ($.randRange(0, 20) > 5) {
