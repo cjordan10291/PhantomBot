@@ -216,22 +216,22 @@
      * @param {string} line
      * @returns {string}
      */
-    function replaceTags(line) {
+    function replaceTags(line,adventCaught,adventSurvivors) {
         if (line.indexOf('(caught)') > -1) {
-            if (currentAdventure.caught.length > 0) {
-                return line.replace('(caught)', adventureUsersListJoin(currentAdventure.caught));
+            if (adventCaught.length > 0) {
+                return line.replace('(caught)', adventureUsersListJoin(adventCaught)).replace('(greatEvil)',greatEvilName);
             } else {
                 return '';
             }
         }
         if (line.indexOf('(survivors)') > -1) {
-            if (currentAdventure.survivors.length > 0) {
-                return line.replace('(survivors)', adventureUsersListJoin(currentAdventure.survivors));
+            if (adventSurvivors.length > 0) {
+                return line.replace('(survivors)', adventureUsersListJoin(adventSurvivors)).replace('(greatEvil)',greatEvilName);
             } else {
                 return '';
             }
         }
-        return line
+        return line.replace('(greatEvil)',greatEvilName);
     };
 
     /**
@@ -426,10 +426,9 @@
         } while (story == lastStory);
 
         $.say($.lang.get('questsystem.runstory', story.title, currentAdventure.users.length));
-
         t = setInterval(function() {
             if (progress < story.lines.length) {
-                line = replaceTags(story.lines[progress]);
+                line = replaceTags(story.lines[progress],currentAdventure.caught, currentAdventure.survivors);
                 if (line != '') {
                     $.say(line.replace(/\(game\)/g, $.twitchcache.getGameTitle() + ''));
                 }
@@ -449,10 +448,11 @@
             story,
             line,
             t;
-
+		$.consoleLn("Got to runFinalStory");
         finalAdventure.gameState = 2;
         calculateFinalResult();
-
+		
+		$.consoleLn("Passed calculateFinalResult runFinalStory, finalStories.length is " + finalStories.length);
         for (var i in finalStories) {
             if (finalStories[i].game != null) {
                 if (($.twitchcache.getGameTitle() + '').toLowerCase() == finalStories[i].game.toLowerCase()) {
@@ -465,15 +465,17 @@
             }
         }
 
-        do {
+//        do {
             story = $.randElement(temp);
-        } while (story == lastStory);
+//        } while (story == lastStory);
 
         $.say($.lang.get('questsystem.runstory', story.title, finalAdventure.users.length));
 
+		$.consoleLn("final story lines.length:" + story.lines.length)
+
         t = setInterval(function() {
             if (progress < story.lines.length) {
-                line = replaceTags(story.lines[progress]);
+                line = replaceTags(story.lines[progress],finalAdventure.caught, finalAdventure.survivors);
                 if (line != '') {
                     $.say(line.replace(/\(game\)/g, $.twitchcache.getGameTitle() + ''));
                 }
@@ -635,11 +637,11 @@
 		}
 
         if (temp.length == 0) {
-            $.say($.lang.get('questsystem.finalbattle.completed.no.win'));
+            $.say($.lang.get('questsystem.finalbattle.completed.no.win',greatEvilName, $.getPointsString(greatEvilStrength)));
         } else if (((maxlength + 14) + $.channelName.length) > 512) {
             $.say($.lang.get('questsystem.finalbattle.completed.win.total', finalAdventure.survivors.length, finalAdventure.caught.length)); //in case too many people enter.
         } else {
-            $.say($.lang.get('questsystem.finalbattle.completed.winshort', temp.join(', ')));
+            $.say($.lang.get('questsystem.finalbattle.completed.win', temp.join(', ')));
         }
 		
 		if (temp2.length==0 && finalAdventure.greatEvilVanquished)
@@ -934,7 +936,7 @@
      */
     function displayDebug() {
 		$.say($.lang.get('questsystem.debug.page1',
-			foundKeys, totalKeys, findKeyPercent, liegeName, greatEvilName
+			foundKeys, totalKeys, findKeyPercent, liegeName, greatEvilName,greatEvilStrength
 		));
 
     };
