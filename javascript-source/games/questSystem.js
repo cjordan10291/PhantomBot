@@ -512,7 +512,7 @@
 		finalAdventure.adjustedBetTotal=betTotal;
 		
 		finalAdventure.greatEvilVanquished=false;
-		
+		finalAdventure.possessed=true;
 		if (betTotal> (2*greatEvilStrength) )
 		{
 			finalAdventure.greatEvilVanquished=true;
@@ -575,10 +575,10 @@
 			{
 				finalAdventure.newEvil=greatEvilName;
 			}
-			else if (finalAdventure.survivors.length == 2)  // no caught, 2 survivors.
+			else if (finalAdventure.survivors.length == 2)  // no caught, 2 survivors.  One is new liege, one is evil
 			{
 				var evilIndex=$.randRange(0,finalAdventure.survivors.length-1);
-				while (finalAdventure.survivors[evilIndex].username.equalsIgnoreCase(liegeName))
+				while (finalAdventure.survivors[evilIndex].username.equalsIgnoreCase(finalAdventure.newLiege))
 				{
 					evilIndex=$.randRange(0,finalAdventure.survivors.length-1);
 				}
@@ -587,7 +587,7 @@
 			else // no caught, at least 3 survivors.  We can get a great evil not the current one and not the new liege
 			{
 				var evilIndex=$.randRange(0,finalAdventure.survivors.length-1);
-				while (finalAdventure.survivors[evilIndex].username.equalsIgnoreCase(liegeName) || finalAdventure.survivors[evilIndex].equalsIgnoreCase(greatEvilName))
+				while (finalAdventure.survivors[evilIndex].username.equalsIgnoreCase(finalAdventure.newLiege) || finalAdventure.survivors[evilIndex].equalsIgnoreCase(greatEvilName))
 				{
 					evilIndex=$.randRange(0,finalAdventure.survivors.length-1);
 				}
@@ -688,7 +688,7 @@
 		{
 			$.say($.lang.get('questsystem.sameevil',greatEvilName));
 		}
-		else if (possessed)
+		else if (wasPossessed)
 		{
 			$.say($.lang.get('questsystem.newevil.possessed',greatEvilName, newEvil));
 		}
@@ -892,7 +892,10 @@
 			finalBattle: true,
 			messageTag: 'finalbattle',
 			heistFunction: startFinalAdventure,
-			greatEvilVanquished: false
+			greatEvilVanquished: false,
+			possessed: false,
+			newLiege: 'Sumsum',
+			newEvil: 'Gillotte'
         }
 		
         $.inidb.RemoveFile('finalPayoutsTEMP');
@@ -938,6 +941,9 @@
 		$.say('Clearing keys...');
 		clearQuestKeys();
 		$.say('Keys cleared.');
+		$.say('Clearing final adventure...');
+		clearFinalAdventure();
+		$.say('Final adventure cleared');
 	}
 	
 	/**
@@ -945,7 +951,7 @@
      */
     function displayDebug() {
 		$.say($.lang.get('questsystem.debug.page1',
-			foundKeys, totalKeys, findKeyPercent, liegeName, greatEvilName,greatEvilStrength
+			foundKeys, totalKeys, findKeyPercent, liegeName, greatEvilName,greatEvilStrength,finalAdventure.gameState
 		));
 
     };

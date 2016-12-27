@@ -1,6 +1,6 @@
 $.lang.register('questsystem.adventure.cooldown', 'The quest is still cooling down! $1 to go.');
 $.lang.register('questsystem.command.adminonly','Sorry, that command is limited to admins only.');
-$.lang.register('questsystem.debug.page1','QUESTDEBUG: foundKeys: $1, totalKeys: $2, findKeyPercent: $3, liegeName: [$4]  greatEvilName: [$5], greatEvilStrength $6');
+$.lang.register('questsystem.debug.page1','QUESTDEBUG: foundKeys: $1, totalKeys: $2, findKeyPercent: $3, liegeName: [$4]  greatEvilName: [$5], greatEvilStrength $6 finalAdventure.gamestate: $7');
 $.lang.register('questsystem.keyfound','As the survivors turn to leave, a shimmer in the air catches the eye of $1.  Inside this mystical hiding place is found $2! The $4$5 key, the $3, has been found!');
 $.lang.register('questsystem.finalbattle.usage', 'Usage: !finalbattle [$1].  The final battle is$2 available at this time.  $3 of $4 $5 have been found.');
 $.lang.register('questsystem.keyname.singular','key');
